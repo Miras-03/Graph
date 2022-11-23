@@ -1,0 +1,221 @@
+#include<iostream>
+#define VROAD 2
+using namespace std;
+int main()
+{
+	int count = 1;
+	int ribsSize;
+	int vertexSize;
+	int valuesCount;
+	cout << "Enter number for vertex: ";
+	cin >> ribsSize;
+	cout << "Enter number for ribs: ";
+	cin >> vertexSize;
+	int** values = new int* [vertexSize];
+	int** vertex = new int* [ribsSize];
+	bool** truthTable = new bool* [ribsSize];
+	int** incendentalMatrix = new int* [ribsSize];
+	for (int i = 0; i < vertexSize; ++i)
+		values[i] = new int[VROAD];
+	for (int i = 0; i < ribsSize; ++i)
+		vertex[i] = new int[ribsSize];
+	for (int i = 0; i < ribsSize; ++i)
+		truthTable[i] = new bool[ribsSize];
+	for (int i = 0; i < ribsSize; ++i)
+		incendentalMatrix[i] = new int[vertexSize];
+	for (int i = 0; i < ribsSize; i++)
+	{
+		count = 1;
+		for (int j = 0; j < vertexSize; j++)
+		{
+			vertex[i][j] = count;
+			++count;
+		}
+	}
+	cout << "Enter elements for vertex:\n";
+	for (int i = 0; i < vertexSize; i++)
+	{
+		cout << "Rows: " << i + 1 << endl;
+		for (int j = 0; j < VROAD; j++)
+		{
+			cout << "El " << j + 1 << ": ";
+			cin >> values[i][j];
+		}
+	}
+	cout << "Values: ";
+	for (int i = 0; i < vertexSize; i++)
+	{
+		cout << "(";
+		for (int j = 0; j < VROAD; j++)
+		{
+			cout << values[i][j];
+			if (j != 1)
+				cout << ",";
+		}
+		cout << ")";
+		if (i != vertexSize - 1)
+			cout << ",";
+	}
+	cout << endl;
+	count = 1;
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < ribsSize; j++)
+		{
+			for (int k = 0; k < ribsSize; k++)
+			{
+				if (count == values[k][0] && vertex[i][j] == values[k][1])
+				{
+					truthTable[i][j] = true;
+					break;
+				}
+				else
+					truthTable[i][j] = false;
+			}
+		}
+		++count;
+	}
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < vertexSize; j++)
+			incendentalMatrix[i][j] = 0;
+	}
+	count = 1;
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < ribsSize; j++)
+			for (int k = 0; k < vertexSize; k++)
+				if (count == values[k][0] && vertex[i][j] == values[k][1])
+					incendentalMatrix[i][k] = 1;
+		++count;
+	}
+	count = 1;
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < ribsSize; j++)
+			if (count == values[j][0] && vertex[i][j] == values[j][1])
+				incendentalMatrix[i][j] = 1;
+		++count;
+	}
+	count = 1;
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < ribsSize; j++)
+		{
+			for (int k = 0; k < vertexSize; k++)
+			{
+				if (count == values[k][1] && vertex[i][j] == values[k][0])
+					incendentalMatrix[i][k] = -1;
+			}
+		}
+		++count;
+	}
+	count = 1;
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < vertexSize; j++)
+		{
+			if (count == values[j][0] && vertex[i][j] == values[j][0] && values[j][0] == values[j][1])
+				incendentalMatrix[i][j] = 2;
+		}
+		++count;
+	}
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < ribsSize; j++)
+			cout << truthTable[i][j] << "|";
+		cout << endl;
+	}
+	cout << endl;
+	count = 1;
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < ribsSize; j++)
+		{
+			for (int k = 0; k < vertexSize; k++)
+			{
+				if (count == values[k][0] && vertex[i][j] == values[k][1])
+				{
+					cout << "G+1(" << values[k][0] << ")=" << values[k][1] << endl;
+					break;
+				}
+			}
+		}
+		++count;
+	}
+	count = 1;
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < ribsSize; j++)
+		{
+			for (int k = 0; k < vertexSize; k++)
+			{
+				if (count == values[k][1] && vertex[i][j] == values[k][0])
+				{
+					cout << "G-1(" << values[k][1] << ")=" << values[k][0] << endl;
+					break;
+				}
+			}
+		}
+		++count;
+	}
+	cout << endl;
+	count = 1;
+	int tempCount = 0;
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < ribsSize; j++)
+		{
+			for (int k = 0; k < vertexSize; k++)
+			{
+				if (count == values[k][0] && vertex[i][j] == values[k][1])
+					++tempCount;
+			}
+			if (j == 3 && tempCount != 0)
+			{
+				cout << "p+(" << i + 1 << ")=" << tempCount << endl;
+				tempCount = 0;
+			}
+		}
+		++count;
+	}
+	count = 1;
+	tempCount = 0;
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < ribsSize; j++)
+		{
+			for (int k = 0; k < vertexSize; k++)
+			{
+				if (count == values[k][1] && vertex[i][j] == values[k][0])
+					++tempCount;
+			}
+			if (j == 3 && tempCount != 0)
+			{
+				cout << "p-(" << i + 1 << ")=" << tempCount << endl;
+				tempCount = 0;
+			}
+		}
+		++count;
+	}
+	cout << endl;
+	for (int i = 0; i < ribsSize; i++)
+	{
+		for (int j = 0; j < vertexSize; j++)
+			cout << incendentalMatrix[i][j] << "|";
+		cout << endl;
+	}
+	for (int i = 0; i < vertexSize; ++i)
+		delete[] values[i];
+	for (int i = 0; i < ribsSize; ++i)
+		delete[] vertex[i];
+	for (int i = 0; i < ribsSize; ++i)
+		delete[] truthTable[i];
+	for (int i = 0; i < ribsSize; ++i)
+		delete[] incendentalMatrix[i];
+	delete[] values;
+	delete[] vertex;
+	delete[] truthTable;
+	delete[] incendentalMatrix;
+	return 0;
+}
