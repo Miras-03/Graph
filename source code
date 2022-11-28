@@ -4,36 +4,36 @@ using namespace std;
 int main()
 {
 	int count = 1;
-	int ribsSize;
 	int vertexSize;
+	int ribsSize;
 	int valuesCount;
 	cout << "Enter number for vertex: ";
-	cin >> ribsSize;
-	cout << "Enter number for ribs: ";
 	cin >> vertexSize;
-	int** values = new int* [vertexSize];
-	int** vertex = new int* [ribsSize];
-	bool** truthTable = new bool* [ribsSize];
-	int** incendentalMatrix = new int* [ribsSize];
-	for (int i = 0; i < vertexSize; ++i)
+	cout << "Enter number for ribs: ";
+	cin >> ribsSize;
+	int** values = new int* [ribsSize];
+	int** vertex = new int* [vertexSize];
+	bool** truthTable = new bool* [vertexSize];
+	int** incendentalMatrix = new int* [vertexSize];
+	for (int i = 0; i < ribsSize; ++i)
 		values[i] = new int[VROAD];
-	for (int i = 0; i < ribsSize; ++i)
-		vertex[i] = new int[ribsSize];
-	for (int i = 0; i < ribsSize; ++i)
-		truthTable[i] = new bool[ribsSize];
-	for (int i = 0; i < ribsSize; ++i)
-		incendentalMatrix[i] = new int[vertexSize];
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; ++i)
+		vertex[i] = new int[vertexSize];
+	for (int i = 0; i < vertexSize; ++i)
+		truthTable[i] = new bool[vertexSize];
+	for (int i = 0; i < vertexSize; ++i)
+		incendentalMatrix[i] = new int[ribsSize];
+	for (int i = 0; i < vertexSize; i++)
 	{
 		count = 1;
-		for (int j = 0; j < vertexSize; j++)
+		for (int j = 0; j < ribsSize; j++)
 		{
 			vertex[i][j] = count;
 			++count;
 		}
 	}
 	cout << "Enter elements for vertex:\n";
-	for (int i = 0; i < vertexSize; i++)
+	for (int i = 0; i < ribsSize; i++)
 	{
 		cout << "Rows: " << i + 1 << endl;
 		for (int j = 0; j < VROAD; j++)
@@ -43,7 +43,7 @@ int main()
 		}
 	}
 	cout << "Values: ";
-	for (int i = 0; i < vertexSize; i++)
+	for (int i = 0; i < ribsSize; i++)
 	{
 		cout << "(";
 		for (int j = 0; j < VROAD; j++)
@@ -53,14 +53,14 @@ int main()
 				cout << ",";
 		}
 		cout << ")";
-		if (i != vertexSize - 1)
+		if (i != ribsSize - 1)
 			cout << ",";
 	}
 	cout << endl;
 	count = 1;
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < ribsSize; j++)
+		for (int j = 0; j < vertexSize; j++)
 		{
 			for (int k = 0; k < ribsSize; k++)
 			{
@@ -75,34 +75,34 @@ int main()
 		}
 		++count;
 	}
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < vertexSize; j++)
+		for (int j = 0; j < ribsSize; j++)
 			incendentalMatrix[i][j] = 0;
 	}
 	count = 1;
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < ribsSize; j++)
-			for (int k = 0; k < vertexSize; k++)
+		for (int j = 0; j < vertexSize; j++)
+			for (int k = 0; k < ribsSize; k++)
 				if (count == values[k][0] && vertex[i][j] == values[k][1])
 					incendentalMatrix[i][k] = 1;
 		++count;
 	}
 	count = 1;
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < ribsSize; j++)
+		for (int j = 0; j < vertexSize; j++)
 			if (count == values[j][0] && vertex[i][j] == values[j][1])
 				incendentalMatrix[i][j] = 1;
 		++count;
 	}
 	count = 1;
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < ribsSize; j++)
+		for (int j = 0; j < vertexSize; j++)
 		{
-			for (int k = 0; k < vertexSize; k++)
+			for (int k = 0; k < ribsSize; k++)
 			{
 				if (count == values[k][1] && vertex[i][j] == values[k][0])
 					incendentalMatrix[i][k] = -1;
@@ -111,28 +111,28 @@ int main()
 		++count;
 	}
 	count = 1;
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < vertexSize; j++)
+		for (int j = 0; j < ribsSize; j++)
 		{
 			if (count == values[j][0] && vertex[i][j] == values[j][0] && values[j][0] == values[j][1])
 				incendentalMatrix[i][j] = 2;
 		}
 		++count;
 	}
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < ribsSize; j++)
+		for (int j = 0; j < vertexSize; j++)
 			cout << truthTable[i][j] << "|";
 		cout << endl;
 	}
 	cout << endl;
 	count = 1;
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < ribsSize; j++)
+		for (int j = 0; j < vertexSize; j++)
 		{
-			for (int k = 0; k < vertexSize; k++)
+			for (int k = 0; k < ribsSize; k++)
 			{
 				if (count == values[k][0] && vertex[i][j] == values[k][1])
 				{
@@ -144,11 +144,11 @@ int main()
 		++count;
 	}
 	count = 1;
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < ribsSize; j++)
+		for (int j = 0; j < vertexSize; j++)
 		{
-			for (int k = 0; k < vertexSize; k++)
+			for (int k = 0; k < ribsSize; k++)
 			{
 				if (count == values[k][1] && vertex[i][j] == values[k][0])
 				{
@@ -162,11 +162,11 @@ int main()
 	cout << endl;
 	count = 1;
 	int tempCount = 0;
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < ribsSize; j++)
+		for (int j = 0; j < vertexSize; j++)
 		{
-			for (int k = 0; k < vertexSize; k++)
+			for (int k = 0; k < ribsSize; k++)
 			{
 				if (count == values[k][0] && vertex[i][j] == values[k][1])
 					++tempCount;
@@ -181,11 +181,11 @@ int main()
 	}
 	count = 1;
 	tempCount = 0;
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < ribsSize; j++)
+		for (int j = 0; j < vertexSize; j++)
 		{
-			for (int k = 0; k < vertexSize; k++)
+			for (int k = 0; k < ribsSize; k++)
 			{
 				if (count == values[k][1] && vertex[i][j] == values[k][0])
 					++tempCount;
@@ -199,19 +199,19 @@ int main()
 		++count;
 	}
 	cout << endl;
-	for (int i = 0; i < ribsSize; i++)
+	for (int i = 0; i < vertexSize; i++)
 	{
-		for (int j = 0; j < vertexSize; j++)
+		for (int j = 0; j < ribsSize; j++)
 			cout << incendentalMatrix[i][j] << "|";
 		cout << endl;
 	}
-	for (int i = 0; i < vertexSize; ++i)
+	for (int i = 0; i < ribsSize; ++i)
 		delete[] values[i];
-	for (int i = 0; i < ribsSize; ++i)
+	for (int i = 0; i < vertexSize; ++i)
 		delete[] vertex[i];
-	for (int i = 0; i < ribsSize; ++i)
+	for (int i = 0; i < vertexSize; ++i)
 		delete[] truthTable[i];
-	for (int i = 0; i < ribsSize; ++i)
+	for (int i = 0; i < vertexSize; ++i)
 		delete[] incendentalMatrix[i];
 	delete[] values;
 	delete[] vertex;
